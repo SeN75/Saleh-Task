@@ -1,0 +1,34 @@
+<section>
+    <mat-card [formGroup]="form">
+        <mat-card-header>
+            <mat-card-title>{{isLogin ? 'Login' : 'Sign up'}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field >
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngFor="let error of getKeys(controls['email'].errors)"
+            >
+            {{Validation[error]}}
+
+          </mat-error>
+          </mat-form-field>
+          <mat-form-field >
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password">
+            <mat-error></mat-error>
+            <button mat-icon-button matSuffix><mat-icon>person</mat-icon></button>
+            <mat-error *ngFor="let error of getKeys(controls['password'].errors)"
+            >
+            {{Validation[error]}}
+
+          </mat-error>
+          </mat-form-field>
+          <a (click)="isLogin = !isLogin">{{isLogin ? 'do you have account?' : 'create new account'}}</a>
+        </mat-card-content>
+        <mat-card-actions align="start">
+            <button mat-raised-button (click)="action()" color="primary">{{isLogin ? 'Login' : 'Sign up'}}</button>
+        </mat-card-actions>
+
+    </mat-card>
+</section>

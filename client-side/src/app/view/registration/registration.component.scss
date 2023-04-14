@@ -1,0 +1,14 @@
+section {
+  @apply flex justify-center items-center h-full;
+   & mat-card {
+    @apply max-w-[550px] w-[95%] flex flex-col gap-4;
+    & mat-card-content {
+      @apply flex flex-col;
+    & a {
+      @apply text-[15px] text-purple-900 cursor-pointer;
+      text-decoration: underline;
+    }
+    }
+   }
+
+}
