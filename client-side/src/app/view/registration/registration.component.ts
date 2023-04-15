@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Validation } from '../../common/validation';
 import { LoggerService } from 'src/app/services/logger.service';
+import { RegistrationService } from './registration.service';
 
 @Component({
   selector: 'app-main',
@@ -16,7 +17,8 @@ export class RegisterationComponent implements OnInit {
     return this.form.controls;
   }
   constructor(
-    private logger: LoggerService
+    private logger: LoggerService,
+    private registerSrv: RegistrationService
   ) {
     this.form = new FormGroup({
       email: new FormControl<string>('', [
@@ -36,12 +38,12 @@ export class RegisterationComponent implements OnInit {
   }
 
   action() {
+    const {value} = this.form
     if(this.isLogin) {
-      this.logger.log('login action')
+      this.registerSrv.login(value)
     }
     else {
-      this.logger.log('signup action')
-
+      this.registerSrv.signup(value)
     }
   }
 }
