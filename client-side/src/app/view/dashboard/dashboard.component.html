@@ -1,1 +1,10 @@
-<p>main works!</p>
+<main>
+  <!-- sidebar without signout -->
+    <sidebar/>
+  <!-- main section with tables and filter -->
+  <section>
+    <dash-filter/>
+    <dash-table [dataSource]="dataSource" [tabelActions]="dataTableActions" [coulmus]="dataTabelColumns"
+    [data]="dataTabelFiels"/>
+  </section>
+</main>
