@@ -1,17 +1,55 @@
+import { Int32 } from "mongodb";
 import { Schema, model } from "mongoose";
 
 // export type Company
-interface ICompany  {
-    name_ar: string,
-    name_en: string,
-    image: string,
-    budget: string,
-
+interface ICompany {
+  name_ar: string;
+  name_en: string;
+  image: string;
+  budget: number;
+  created_at: Date
 }
-const userSchema = new Schema<ICompany>({
-    name_ar: {type: String, required: true},
-    name_en: {type: String, required: true},
-    image: {type: String, required: true}
-})
+const companySchema = new Schema<ICompany>({
+  name_ar: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (name: string) {
+        return /[\u0621-\u064A\u0660-\u0669]+/g.test(name);
+      },
+      message: "only arabic letters accepted",
+    },
+  },
+  name_en: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (name: string) {
+        return /[a-zA-Z]+/.test(name);
+      },
+      message: "only english letters accepted",
+    },
+  },
+  image: {
+    type: String,
+    required: true,
+    // validate: {
+    //   validator: function (img: string) {
+    //     return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/gm.test(
+    //       img
+    //     );
+    //   },
+    //   message: 'invalid url'
+    // },
+  },
+  budget: {
+    type: Number,
+    default: 0,
+  },
+  created_at: {
+    type: Date,
+    default: new Date(),
+  }
+});
 
-export const User = model<ICompany>('users', userSchema);
+export const Company = model<ICompany>("Companys", companySchema);

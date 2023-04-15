@@ -16,7 +16,7 @@ dotenv.config();
 app.use('/',  router)
 console.log(process.env.DB_CONNECTION)
 if(process.env.DB_CONNECTION)
-mongoose.connect( process.env.DB_CONNECTION , {}).then(() => {
+mongoose.connect( process.env.DB_CONNECTION ).then(() => {
     console.log('db connection')
 });
 
