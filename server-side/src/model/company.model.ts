@@ -15,7 +15,7 @@ const companySchema = new Schema<ICompany>({
     required: true,
     validate: {
       validator: function (name: string) {
-        return /[\u0621-\u064A\u0660-\u0669]+/g.test(name);
+        return (/^[\u0621-\u064A\u0660-\u0669-\u0900-\u097F0-9 ]+$/).test(name);
       },
       message: "only arabic letters accepted",
     },
@@ -25,7 +25,7 @@ const companySchema = new Schema<ICompany>({
     required: true,
     validate: {
       validator: function (name: string) {
-        return /[a-zA-Z]+/.test(name);
+        return (/^[a-zA-Z0-9 ]+$/).test(name);
       },
       message: "only english letters accepted",
     },
