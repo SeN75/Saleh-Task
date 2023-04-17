@@ -1,7 +1,9 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DashboardService } from '../dashboard.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'dash-table',
@@ -29,14 +31,18 @@ import { MatTableDataSource } from '@angular/material/table';
                   item.name
                 }}</span>
               </span>
+              <span *ngSwitchCase="'date'">
+              {{ element[d.value]  | date:'MM/dd/yyyy'}}
+              </span>
 
               <span *ngSwitchCase="'actions'">
                 <button
                   mat-icon-button
                   *ngFor="let action of tabelActions"
                   (click)="action.action(i)"
+                  [color]="action.color"
                 >
-                  <mat-icon>{{ action.icon }}</mat-icon>
+                  <mat-icon >{{ action.icon }}</mat-icon>
                 </button>
               </span>
             </span>
@@ -48,7 +54,7 @@ import { MatTableDataSource } from '@angular/material/table';
       </table>
 
       <mat-paginator
-        [pageSizeOptions]="[1,2,3,4,5]"
+        [pageSizeOptions]="[5,10,15,20]"
         aria-label="Select page of periodic elements"
       >
       </mat-paginator>
@@ -85,30 +91,43 @@ import { MatTableDataSource } from '@angular/material/table';
     `,
   ],
 })
-export class TableComponent {
+export class TableComponent implements OnInit{
   @Input() dataSource!: MatTableDataSource<any>;
   @Input() coulmus!: string[];
   @Input() data: TableDataField[] = [];
   @Input() tabelActions: TableAcion[] = [];
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @Output() pageChange = new EventEmitter();
+  constructor(private dashSrv:DashboardService, private logger: LoggerService) {
 
+  }
+  ngOnInit(): void {
+
+  }
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.paginator.page.subscribe(v => console.log(v))
-    console.log('data ==>', this.dataSource.data);
+    this.paginator.page.subscribe(v => this.pageChange.emit(v))
+    this.dashSrv.paginator$.subscribe(v => {
+      setTimeout(() => {
+        if(this.paginator.length != v.totalRecord) {
+          this.paginator.length = v.totalRecord;
+        }
+      }, 1000)
+    })
   }
 }
 export interface TableDataField {
   label: string;
   title: string;
   value: string;
-  type: 'text' | 'actions' | 'pic' | 'array';
+  type: 'text' | 'actions' | 'pic' | 'array' | 'date';
 }
 
 export interface TableAcion {
   label: string;
   icon: string;
   action: Function;
+  color: string
 }
