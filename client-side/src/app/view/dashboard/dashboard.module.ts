@@ -18,18 +18,28 @@ import { MatInputModule } from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { SideContainerComponent } from './components/side-container.component';
+import { MessageDialogComponent } from './dialogs/message-dialog/message-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+import { DashboarRoutes } from './dashboard.routing';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     SidebarComponent,
     FilterComponent,
-    TableComponent
+    TableComponent,
+    SideContainerComponent,
+    MessageDialogComponent
+
   ],
   imports: [
   CommonModule,
   TranslateModule,
-  RouterModule.forChild([{path:'', component: DashboardComponent}]),
+  RouterModule.forChild(DashboarRoutes),
   MatTableModule,
   MatPaginatorModule,
   MatSortModule,
@@ -39,7 +49,10 @@ import { MatNativeDateModule } from '@angular/material/core';
   MatInputModule,
   MatDatepickerModule,
   ReactiveFormsModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatSidenavModule,
+  MatDialogModule,
+  MatSnackBarModule
   ]
 })
 export class DashboardModule { }

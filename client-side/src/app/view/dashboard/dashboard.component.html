@@ -1,10 +1,53 @@
+
 <main>
   <!-- sidebar without signout -->
     <sidebar/>
   <!-- main section with tables and filter -->
   <section>
     <dash-filter/>
-    <dash-table [dataSource]="dataSource" [tabelActions]="dataTableActions" [coulmus]="dataTabelColumns"
+    <div class="addbutton" *ngIf="isAdmin">
+      <button mat-raised-button color="primary" (click)="openSideContainer()" >Add +</button>
+    </div>
+
+    <dash-table
+    (pageChange)="pageChange($event)"
+    [dataSource]="dataSource"
+    [tabelActions]="dataTableActions"
+    [coulmus]="dataTabelColumns"
     [data]="dataTabelFiels"/>
   </section>
 </main>
+
+<side-container [settings]="settings" *ngIf="isAdmin">
+
+  <form [formGroup]="form" class="form">
+    <mat-form-field>
+      <mat-label>name ar</mat-label>
+      <input matInput formControlName="name_ar">
+      <mat-error *ngFor="let error of keys(controls['name_ar'].errors)">
+        {{(error =='pattern' ? Validation[(error+"_ar")] :Validation[error] )}}
+      </mat-error>
+
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>name en</mat-label>
+      <input matInput formControlName="name_en">
+      <mat-error *ngFor="let error of keys(controls['name_en'].errors)">
+        {{(error =='pattern' ? Validation[(error+"_en")] :Validation[error] )}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>image</mat-label>
+      <input matInput formControlName="image">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>budget</mat-label>
+      <input matInput formControlName="budget">
+    </mat-form-field>
+
+    <div class="action">
+      <button mat-raised-button color="primary" (click)="action()" [disabled]="form.invalid">{{settings.action}}</button>
+      <button mat-button (click)="settings.isOpen = false" >cancel</button>
+    </div>
+  </form>
+</side-container>
