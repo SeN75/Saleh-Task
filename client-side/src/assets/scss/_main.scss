@@ -1,0 +1,6 @@
+[mat-dialog-title]  {
+  @apply mb-4;
+  & div {
+    @apply flex justify-between text-[24px] capitalize;
+  }
+}
