@@ -15,9 +15,16 @@ router.post("/sign-up", async (req, res) => {
       .status(400)
       .json({ message: "there no data to insert", status: 400 });
   try {
-    const check = await User.find();
+    const count = await User.count();
+    const checkIfExist = await User.find({'email': body['email']})
+
+    if(checkIfExist && checkIfExist[0])
+      return res.status(400).json({"errors": {
+        email: 'account already exist'
+      }, message: "this account already exist",status: 400})
+
     const result = await User.create(
-      (check.length != 0 ? body : { ...body, role: "ADMIN" }) as IUser
+      (count != 0 ? body : { ...body, role: "ADMIN" }) as IUser
     );
     return res.status(200).json(result);
   } catch (e) {
@@ -33,7 +40,6 @@ router.post("/login", async (req, res) => {
       .status(400)
       .json({ message: "there no data to insert", status: 400 });
   try {
-    const validateInput = await  User.validate()
 
     const user = await User.findOne({ email: body.email }).lean({});
     // check if password match or not
@@ -42,11 +48,11 @@ router.post("/login", async (req, res) => {
       return res
         .status(400)
         .json({
-          message: "invalid Inputs",
+          message: "password not match",
           status: 400,
-          values: { password: "password not match" },
+          errors: { password: "password not match" },
         });
-
+  
     return res.status(201).json(user);
   } catch (e) {
 
@@ -54,7 +60,7 @@ router.post("/login", async (req, res) => {
 
     return res
       .status(404)
-      .json({ message: "somthing wrong happend", status: 404 });
+      .json({ message: "this account not exist", status: 404 , errors: {email: "this account not exist"}});
   }
 });
 

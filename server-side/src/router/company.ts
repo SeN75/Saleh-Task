@@ -8,6 +8,27 @@ router.get("/", async (req, res) => {
     const { query } = req;
     let request = Company.find();
 
+    if(query['filter']) {
+      if( typeof query['filter'] == 'string'){
+        const filter = JSON.parse(query['filter']);
+        // name filter
+        if((/^[\u0621-\u064A\u0660-\u0669-\u0900-\u097F ]+$/).test(filter['name']))
+          request = request.regex('name_ar', filter['name'])
+        else if((/^[a-zA-Z0-9 ]+$/).test(filter['name']))
+          request = request.regex('name_en', filter['name'])
+        // date filter
+        if(filter['date'] && filter['date']['startDate'] && filter['date']['endDate'])
+          request = request.find({created_at: {
+            $gte: filter['date']['startDate'],
+            $lte:  filter['date']['endDate'],
+          }})
+        // budget filter
+        if(filter['budget'])
+          request = request.where('budget').equals(+filter['budget'])
+      }
+    }
+    let totalRecord = await Company.count()
+
     // page and limit filter
     if (query["page"] || query["limit"]) {
       const page = (query["page"] || 0) as number;
@@ -15,7 +36,7 @@ router.get("/", async (req, res) => {
       request = request.skip(page * limit).limit(limit);
     }
     const companies = await request;
-    return res.status(200).json(companies);
+    return res.status(200).json({companies, totalRecord});
   } catch (e) {
     console.error(e);
   }
@@ -53,10 +74,8 @@ router.delete("/:companyId", async (req, res) => {
 //
 
 router.patch("/:companyId", async (req, res) => {
-  const { query, body, params } = req;
+  const { body, params } = req;
   const { companyId } = params;
-console.log(params)
-console.log(body)
   if (!companyId)
     return res.status(400).json({ message: "companyId required for update" });
   if (!body || !Object.keys(body).length)
@@ -65,7 +84,7 @@ console.log(body)
       .json({ message: "body is messing, you need to insert data to update" });
   try {
     const request = await Company.findOneAndUpdate(
-      { _id: new ObjectId(companyId as string) },
+      { _id: companyId },
       body
     );
     return res.status(201).json({ ...request?.toObject(), ...body });
