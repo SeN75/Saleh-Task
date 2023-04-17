@@ -11,6 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     RegisterationComponent
@@ -24,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   MatFormFieldModule,
   MatInputModule,
   MatIconModule,
-ReactiveFormsModule
+ReactiveFormsModule,
+MatSnackBarModule
   ]
 })
 export class RegistrationModule { }

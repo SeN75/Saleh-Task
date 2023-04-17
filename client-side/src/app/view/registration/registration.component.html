@@ -9,7 +9,7 @@
             <input matInput formControlName="email">
             <mat-error *ngFor="let error of getKeys(controls['email'].errors)"
             >
-            {{Validation[error]}}
+            {{Validation[error] || controls['email'].errors![error]}}
 
           </mat-error>
           </mat-form-field>
@@ -20,11 +20,11 @@
             <button mat-icon-button matSuffix><mat-icon>person</mat-icon></button>
             <mat-error *ngFor="let error of getKeys(controls['password'].errors)"
             >
-            {{Validation[error]}}
+            {{Validation[error] || controls['password'].errors![error]}}
 
           </mat-error>
           </mat-form-field>
-          <a (click)="isLogin = !isLogin">{{isLogin ? 'do you have account?' : 'create new account'}}</a>
+          <a (click)="isLogin = !isLogin">{{!isLogin ? 'do you have account?' : 'create new account'}}</a>
         </mat-card-content>
         <mat-card-actions align="start">
             <button mat-raised-button (click)="action()" color="primary">{{isLogin ? 'Login' : 'Sign up'}}</button>

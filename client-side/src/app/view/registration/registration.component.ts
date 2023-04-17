@@ -10,7 +10,7 @@ import { RegistrationService } from './registration.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegisterationComponent implements OnInit {
-  isLogin = false;
+  isLogin = true;
   form: FormGroup;
   Validation = Validation;
   get controls() {
@@ -38,12 +38,13 @@ export class RegisterationComponent implements OnInit {
   }
 
   action() {
+
     const {value} = this.form
     if(this.isLogin) {
-      this.registerSrv.login(value)
+      this.registerSrv.login(value, this.controls)
     }
     else {
-      this.registerSrv.signup(value)
+      this.registerSrv.signup(value, this.controls)
     }
   }
 }
